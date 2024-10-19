@@ -4,8 +4,8 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from search_technique import SearchTechnique
-
+from search_technique import SearchTechnique   
+  
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -235,7 +235,7 @@ class MainWindow(QMainWindow):
         label.setStyleSheet("""
             padding: 40px;
             border: 1px solid black;
-            font-size: 20px;
+            border-radius:10px;
             font-weight: bold;
             background-color: #3E3E42;
         """)  
@@ -245,7 +245,9 @@ class MainWindow(QMainWindow):
         label.setStyleSheet("""
             padding: 40px;
             border: 1px solid black;
-            font-size: 20px;
+            border-radius: 10px;
+            margin: 0.5px;
+            font-size: 25px;
             font-weight: bold;
             background-color: #504caf;
         """) 
