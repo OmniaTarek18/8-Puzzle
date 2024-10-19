@@ -1,4 +1,5 @@
 import sys
+import re
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -115,19 +116,36 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(left_widget)
         main_layout.addWidget(right_widget)
         
-        self.set_main_stylesheet()
+        self.set_main_stylesheet(self)
      
     def solve(self):
-        init_state = [int(x) for x in self.init_state.text().split(",")]
+        input = self.init_state.text()
+        
+        # validate the input
+        if not self.validate_input(input):
+            self.show_error_message("Please, Enter valid state e.g. 0,1,2,3,4,5,6,7,8")
+            return
+       
+        init_state = [int(x) for x in input.split(",")]
+        
+        # check uniqueness
+        if len(init_state) > len(set(init_state)):
+            self.show_error_message("Please, Don't repeat any number")
+            return
         
         type = self.algorithm.currentText()
         algorithm = SearchTechnique(type, init_state)
         results = algorithm.solve()
         self.path = results['Path']
+        
+        if results['Cost'] < 0:
+            self.results['Cost'].setText("No Path Found")
+            return
+        
         self.current_index = 0
         self.update_result_labels(results)
         self.update_current_state()
-        
+    
     def next_step(self):
         if self.current_index >= len(self.path)-1 or len(self.path) == 0:
             return
@@ -169,16 +187,33 @@ class MainWindow(QMainWindow):
             label = self.results[i]
             label.setText(f'{i} :    {results[i]}')
         
-    def set_main_stylesheet(self):
-        self.setStyleSheet("""
+    def validate_input(self, input):
+        # use regex to validate the input (8 numbers from 0 to 8 + , and one number from 0 to 8)
+        regex = r"^([0-8],){8}[0-8]$"
+        match = re.search(regex, input)
+        if match:
+            return True
+        else :
+            return False
+        
+    def show_error_message(self, message):
+        msg = QMessageBox() 
+        self.set_main_stylesheet(msg)        
+        msg.setIcon(QMessageBox.Warning) 
+        msg.setText(message) 
+        msg.setWindowTitle("Invalid Input") 
+        msg.setStandardButtons(QMessageBox.Ok) 
+        msg.exec_() 
+        
+    def set_main_stylesheet(self, component):
+        component.setStyleSheet("""
             * {
                 color: #FFFFFF;
                 font-size: 16px;   
             }
-            QMainWindow {
+            QMainWindow, QMessageBox {
                 background-color: #2D2D30;  
             }
-            
             QComboBox, QLineEdit {
                 padding: 5px; 
                 border: 1px solid #4D4D4D; 

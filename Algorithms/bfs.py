@@ -67,7 +67,14 @@ class BFS(Algorithm):
     def get_path(self):  
         
         child = str(self.goal)
-        parent = self.parent[child]
+        try:
+            parent = self.parent[child]
+        except:
+          if(self.init_state == self.goal):
+              return [self.goal]
+          else:
+              return []
+          
         path = deque([parent, self.goal])   
                
         while parent != self.init_state:
