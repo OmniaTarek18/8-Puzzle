@@ -1,3 +1,4 @@
+```
 # 8-Puzzle
 
 the hierarchy of the GUI
@@ -19,4 +20,5 @@ the hierarchy of the GUI
                                   |       |_ step_label (QLabel)                 
                                   |       |_ next       (QPushButton)
                                   |_ results_layout (QHBoxLayout)
-                                          |_ 4 labels (QLabel)     
+                                          |_ 4 labels (QLabel)
+```
