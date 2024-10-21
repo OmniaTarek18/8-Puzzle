@@ -7,8 +7,9 @@ import time
 
 
 class AStar(Algorithm):
-    def __init__(self, initial_state, heuristic):
+    def __init__(self, initial_state, heuristic,goal_test=12345678):
         super().__init__(initial_state)
+        self.goal = goal_test
         match heuristic:
             case "Manhattan":
                 self.heuristic = manhattan_heuristic
@@ -22,7 +23,7 @@ class AStar(Algorithm):
         self.frontier = queue.PriorityQueue()
         self.explored = set()
         self.parent = dict()
-        self.goal = 12345678
+        # self.goal = 12345678
         self.depth = 0
 
         # Add the initial state to the frontier with a cost of 0 and no parent.

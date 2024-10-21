@@ -8,7 +8,7 @@ from Algorithms.dfs import DFS
 from Algorithms.ids import IDS
 
 class SearchTechnique:
-    def __new__(self, type, init_state,heuristic = None):
+    def __new__(self, type, init_state,heuristic = None, goal_test = 12345678):
         if type == "BFS":
             return BFS(init_state)
         elif type == "DFS":
@@ -16,6 +16,6 @@ class SearchTechnique:
         elif type == "Iterative DFS":
             return IDS(init_state)
         elif type == "AStar":
-            return AStar(init_state, heuristic)
+            return AStar(init_state, heuristic, goal_test)
         # else if type == "A*":
         #     return A*(init_state)
