@@ -1,4 +1,4 @@
-from algorithm import Algorithm 
+from Algorithms.algorithm import Algorithm
 
 
 class IDS(Algorithm):

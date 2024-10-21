@@ -1,4 +1,4 @@
-from algorithm import Algorithm 
+from Algorithms.algorithm import Algorithm
 from collections import deque
 from datetime import timedelta
 import time
