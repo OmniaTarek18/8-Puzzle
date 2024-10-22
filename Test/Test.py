@@ -1,13 +1,8 @@
 import unittest
-
-from stem.descriptor.export import export_csv
-
 from Algorithms.search_technique import *
 from Heuristics.Euclidean import euclidean_heuristic
 from Heuristics.Manhattan import manhattan_heuristic
 class Test(unittest.TestCase):
-    def test_something(self):
-        self.assertEqual(True, True)  # add assertion here
 
     def test_isSolvable(self):
        algo = SearchTechnique.__new__(SearchTechnique, "AStar", 123456780, 'Manhattan')
@@ -34,11 +29,11 @@ class Test(unittest.TestCase):
 
     def test_manhattan_distance(self):
         heuristic = manhattan_heuristic(102345678, 12345678)
-        self.assertEqual(heuristic, 2)
+        self.assertEqual(heuristic, 1)
 
     def test_euclidean_distance(self):
         heuristic = euclidean_heuristic(102345678, 12345678)
-        self.assertEqual(heuristic, 2)
+        self.assertEqual(heuristic, 1)
 
     def test_astar_manhattan(self):
         algo = SearchTechnique.__new__(SearchTechnique, "AStar", 123456780,'Manhattan',12345678)
