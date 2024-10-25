@@ -19,7 +19,7 @@ class AStar(Algorithm):
                 pass
         
     def solve(self):
-        start_time = time.time()
+        start_time = time.perf_counter()
         self.frontier = queue.PriorityQueue()
         self.explored = set()
         self.parent = dict()
@@ -72,7 +72,7 @@ class AStar(Algorithm):
                     self.frontier.put((self.cost + self.heuristic(new_state, self.goal), new_state))
                     self.parent[new_state] = (self.cost, current_state)
 
-        end_time = time.time()
+        end_time = time.perf_counter()
         # Calculate the path, cost, number of nodes expanded, search depth, and running time.
         self.cost = self.parent[self.goal][0]
         self.nodes_explored = len(self.explored)

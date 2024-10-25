@@ -56,8 +56,4 @@ class BFS(Algorithm):
             state = self.parent[state]
         self.cost = len(self.path) - 1
         self.depth = self.cost
-        return self.path
-
-
-    
-
+        return self.path    

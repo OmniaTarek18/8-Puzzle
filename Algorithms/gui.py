@@ -142,16 +142,16 @@ class MainWindow(QMainWindow):
         
         algorithm.solve()   
         algorithm.get_path()
+        self.path = algorithm.path
         
         self.results = {
             'Cost' : algorithm.cost,
             'Running Time' : algorithm.running_time,
             'Depth':  algorithm.depth,
             'Nodes Explored': len(algorithm.explored),
-            'Path' : algorithm.path
+            'Directions': self.get_directions()
         }
          
-        self.path = self.results['Path']
         
         self.current_index = 0
         self.update_result_labels(self.results)
@@ -192,10 +192,11 @@ class MainWindow(QMainWindow):
             label.setText(str_value)
             
     def create_result_labels(self):
-        items = ['Cost', 'Running Time', 'Depth', 'Nodes Explored']
+        items = ['Cost', 'Running Time', 'Depth', 'Nodes Explored', 'Directions']
         self.results_layout.addStretch()
         for i in items:
             label = QLabel()
+            label.setWordWrap(True)
             self.results_labels[i] = label
             self.results_layout.addWidget(label) 
         self.results_layout.addStretch()
@@ -258,6 +259,7 @@ class MainWindow(QMainWindow):
             elif prev_index - 1 == new_index:
                 directions.append("Left")
         print(directions)
+        return directions
                 
             
             
