@@ -156,6 +156,7 @@ class MainWindow(QMainWindow):
         self.current_index = 0
         self.update_result_labels(self.results)
         self.update_current_state()
+        self.get_directions()
     
     def next_step(self):
         if self.current_index >= len(self.path)-1 or len(self.path) == 0:
@@ -238,6 +239,30 @@ class MainWindow(QMainWindow):
         msg.setStandardButtons(QMessageBox.Ok) 
         msg.exec_() 
         
+    def get_directions(self):
+        directions = []
+        length = len(self.path)
+        for i in range(1, length):
+            prev_state = str(self.path[i-1])
+            curr_state = str(self.path[i])
+            
+            prev_index = 0 if len(prev_state) == 8 else prev_state.index('0')
+            new_index = 0 if len(curr_state) == 8 else curr_state.index('0')
+            
+            if prev_index + 3 == new_index:
+                directions.append("Down")
+            elif prev_index - 3 == new_index:
+                directions.append("Up")
+            elif prev_index + 1 == new_index:
+                directions.append("Right")
+            elif prev_index - 1 == new_index:
+                directions.append("Left")
+        print(directions)
+                
+            
+            
+            
+            
     def set_main_stylesheet(self, component):
         component.setStyleSheet("""
             * {
