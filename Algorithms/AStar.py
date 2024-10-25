@@ -17,7 +17,7 @@ class AStar(Algorithm):
                 self.heuristic = euclidean_heuristic
             case _:
                 pass
-
+        
     def solve(self):
         start_time = time.time()
         self.frontier = queue.PriorityQueue()

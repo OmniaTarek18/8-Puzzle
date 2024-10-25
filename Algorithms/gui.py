@@ -4,17 +4,18 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from search_technique import SearchTechnique   
+from Algorithms.search_technique import SearchTechnique   
   
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         
         self.path = []    
+        self.results = {}
         self.current_index = 0
         self.current_state = [0, 1, 2, 3, 4, 5, 6, 7, 8]
         self.puzzle_labels = []
-        self.results = {}
+        self.results_labels = {}
         
         main_widget = QWidget()  
         self.setCentralWidget(main_widget)
@@ -38,7 +39,8 @@ class MainWindow(QMainWindow):
         self.algorithm.addItem("BFS")
         self.algorithm.addItem("DFS")
         self.algorithm.addItem("Iterative DFS")
-        self.algorithm.addItem("A*")
+        self.algorithm.addItem("A* Manhattan")
+        self.algorithm.addItem("A* Euclidean")
         
         # create labels 
         init_state_label = QLabel("Initial State")
@@ -121,29 +123,38 @@ class MainWindow(QMainWindow):
     def solve(self):
         input = self.init_state.text()
         
-        # validate the input
-        if not self.validate_input(input):
-            self.show_error_message("Please, Enter valid state e.g. 0,1,2,3,4,5,6,7,8")
-            return
-       
-        init_state = [int(x) for x in input.split(",")]
-        
-        # check uniqueness
-        if len(init_state) > len(set(init_state)):
-            self.show_error_message("Please, Don't repeat any number")
+        if not self.is_valid_input(input) :
             return
         
+        init_state = int(input.replace(",",""))        
         type = self.algorithm.currentText()
-        algorithm = SearchTechnique(type, init_state)
-        results = algorithm.solve()
-        self.path = results['Path']
         
-        if results['Cost'] < 0:
-            self.results['Cost'].setText("No Path Found")
-            return
+        algorithm = None
+        if type.split(" ")[0] == "A*":
+            algorithm = SearchTechnique(type.split(" ")[0], init_state, type.split(" ")[1])
+            
+        else :  
+            algorithm = SearchTechnique(type, init_state)
+        
+        if not algorithm.is_solvable(): 
+            self.show_error_message("The Puzzle Can't Be Solved")
+            return   
+        
+        algorithm.solve()   
+        algorithm.get_path()
+        
+        self.results = {
+            'Cost' : algorithm.cost,
+            'Running Time' : algorithm.running_time,
+            'Depth':  algorithm.depth,
+            'Nodes Explored': len(algorithm.explored),
+            'Path' : algorithm.path
+        }
+         
+        self.path = self.results['Path']
         
         self.current_index = 0
-        self.update_result_labels(results)
+        self.update_result_labels(self.results)
         self.update_current_state()
     
     def next_step(self):
@@ -159,18 +170,24 @@ class MainWindow(QMainWindow):
         self.update_current_state()
         
     def update_current_state(self):
-        self.current_state = self.path[self.current_index]
+        state = self.path[self.current_index]
+        self.current_state = str(state)
         self.step_label.setText(str(self.current_index))
         self.update_puzzle()
         
     def update_puzzle(self):
+        # adding leading 0 if state length = 8 instead of 9
+        if len(self.current_state) == 8 :
+            self.current_state = '0' + self.current_state
+            
+        # update the labels with the right number or empty in case of 0
         for i, label in enumerate(self.puzzle_labels):
             value = self.current_state[i]
-            if value > 0:
+            if int(value) > 0:
                 self.set_label_style(label, value)
             else:
                 self.set_free_label_style(label)
-            str_value = str(value) if value > 0 else ""
+            str_value = value if int(value) > 0 else ""
             label.setText(str_value)
             
     def create_result_labels(self):
@@ -178,16 +195,16 @@ class MainWindow(QMainWindow):
         self.results_layout.addStretch()
         for i in items:
             label = QLabel()
-            self.results[i] = label
+            self.results_labels[i] = label
             self.results_layout.addWidget(label) 
         self.results_layout.addStretch()
                
     def update_result_labels(self, results):
-        for i in self.results:
-            label = self.results[i]
-            label.setText(f'{i} :    {results[i]}')
+        for i in self.results_labels:
+            label = self.results_labels[i]
+            label.setText(f'{i} :    {self.results[i]}')
         
-    def validate_input(self, input):
+    def validate_input_form(self, input):
         # use regex to validate the input (8 numbers from 0 to 8 + , and one number from 0 to 8)
         regex = r"^([0-8],){8}[0-8]$"
         match = re.search(regex, input)
@@ -195,6 +212,22 @@ class MainWindow(QMainWindow):
             return True
         else :
             return False
+        
+    def is_valid_input(self, input):
+        # validate the input form (1,2,3,0,...)
+        if not self.validate_input_form(input):
+            self.show_error_message("Please, Enter valid state e.g. 0,1,2,3,4,5,6,7,8")
+            return False
+       
+        init_state = [int(x) for x in input.split(",")]
+        
+        # check uniqueness
+        if len(init_state) > len(set(init_state)):
+            self.show_error_message("Please, Don't repeat any number")
+            return False
+        
+        return True
+        
         
     def show_error_message(self, message):
         msg = QMessageBox() 
@@ -214,7 +247,7 @@ class MainWindow(QMainWindow):
             QMainWindow, QMessageBox {
                 background-color: #2D2D30;  
             }
-            QComboBox, QLineEdit {
+            QComboBox,QComboBox QAbstractItemView, QLineEdit {
                 padding: 5px; 
                 border: 1px solid #4D4D4D; 
                 border-radius: 5px; 
