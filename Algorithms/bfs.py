@@ -40,20 +40,23 @@ class BFS(Algorithm):
                     
                     # check if it is the goal 
                     if new_state == self.goal:
+                        self.get_results()
+                        self.running_time = time.perf_counter() - begin_time
                         return
                     
                     self.frontier.append(new_state)
                     
-            self.running_time = time.perf_counter() - begin_time
-
-                               
-
-    def get_path(self):
-        self.path = deque()  
-        state = self.goal
-        while state is not None:
-            self.path.appendleft(state)
-            state = self.parent[state]
+            
+    def get_results(self):
+        self.path = self.get_path()
+        self.nodes_explored = len(self.explored)
         self.cost = len(self.path) - 1
         self.depth = self.cost
-        return self.path    
+        
+    def get_path(self):
+        path = deque()  
+        state = self.goal
+        while state is not None:
+            path.appendleft(state)
+            state = self.parent[state]
+        return path    

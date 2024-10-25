@@ -141,14 +141,13 @@ class MainWindow(QMainWindow):
             return   
         
         algorithm.solve()   
-        algorithm.get_path()
         self.path = algorithm.path
         
         self.results = {
             'Cost' : algorithm.cost,
             'Running Time' : algorithm.running_time,
             'Depth':  algorithm.depth,
-            'Nodes Explored': len(algorithm.explored),
+            'Nodes Explored': algorithm.nodes_explored,
             'Directions': self.get_directions()
         }
          
