@@ -1,6 +1,6 @@
 from collections import deque
 import time
-from algorithm import Algorithm
+from Algorithms.algorithm import Algorithm
 
 
 class IDS(Algorithm):
@@ -8,82 +8,78 @@ class IDS(Algorithm):
         super().__init__(init_state)
         self.goal = goal_test
 
-    def dls(self, depth):
-        self.frontier = deque()
-        self.explored = []
+    def dls(self, limit):
+        self.explored = set()  # Reset explored for each depth limit
         self.parent = {}
-        self.depth = 0
-        max_depth = 0  # Track depth for this iteration only
 
         # Initialize frontier with (state, depth)
         self.frontier.append((self.init_state, 0))
         self.parent[self.init_state] = None
 
-        # check if it is the goal
-        if self.init_state == self.goal:
-            self.path = self.get_path()
-            self.nodes_explored += 1
-            return True
-        
-        # Initialize depth
-        max_depth = 0
+        goal_found = False
+        self.cost = -1
 
         while self.frontier:
             current_state, current_depth = self.frontier.pop()
-            self.explored.add(current_state)
-            
-            # Update maximum depth reached
-            self.depth = max(max_depth, current_depth, self.depth)
+            self.nodes_explored += 1
+            # Update the maximum depth reached
+            self.depth = max(self.depth, current_depth)
 
+            # Check if the current state is the goal
             if current_state == self.goal:
-                self.cost = current_depth
-                self.nodes_explored += len(self.explored)
-                self.path = self.get_path()  # Retrieve path to goal
-                return True
-            
-            if current_depth < depth:
+                goal_found = True
+                if (self.cost == -1):
+                    self.cost = current_depth
+                    self.path = self.get_path()
 
-                # Get the location of the empty tile
+                elif (self.cost > current_depth):
+                    self.cost = current_depth  # Cost is depth when the goal is found
+                    self.path = self.get_path()  # Get path to the goal
+                continue
+
+            # If the current depth is less than the limit, explore further
+            if current_depth < limit:
+                # Get the location of the empty tile in the current state
                 empty_tile = self.get_empty_tile_location(current_state)
 
-                # Try all four possible moves
-                # based on this, the order of pushing into the stack is right, down, left, up
+                # Define possible moves: right, down, left, up
                 moves = [1, 3, -1, -3]
 
-                # pushing the neighbors in the stack
                 for move in moves:
-                    # check the validity of possible moves (up, down, left, right)
+                    # Check the validity of the move
                     if not self.is_valid_move(empty_tile, move):
                         continue
 
-                    # Apply the move to generate a new state
+                    # Apply the move to get the new state
                     new_state = self.apply_move(current_state, empty_tile, move)
 
-                    # Check if the new state is in the explored states or not
-                    if new_state not in self.explored:
-                        # Add new state and depth to frontier
+                    if not self.check_loop(current_state, new_state):
+                        # Push new state with increased depth
                         self.frontier.append((new_state, current_depth + 1))
                         self.parent[new_state] = current_state
-        
-        self.nodes_explored += len(self.explored)
-        self.depth = max(self.depth, max_depth)
-        self.cost = current_depth
-        self.path = self.get_path()
+
+        return goal_found  # Goal not found within the depth limit
+    
+    def check_loop (self,current_state, new_state):
+        while (current_state != None):
+            if (current_state == new_state):
+                return True
+            current_state = self.parent.get(current_state)
         return False
+
+    def iddfs(self):
+        depth = 0
+        while True:
+            found = self.dls(depth)  # Perform depth-limited search
+            if found:  # If the goal is found, return
+                return
+            depth += 1 
 
     def solve(self):
         start_time = time.perf_counter()
-
-        depth = 0
-        is_goal_found = False
-
-        while not is_goal_found:
-            is_goal_found = self.dls(depth)
-            depth += 1
-
+        self.iddfs()  # Start IDDFS
         end_time = time.perf_counter()
         self.running_time = end_time - start_time
-
 
     def get_path(self):
         path = deque()
@@ -95,6 +91,10 @@ class IDS(Algorithm):
 
         return path
 
+
+# ids = IDS(867254301)
+# ids.solve()
+# print('Cost: {}\nSearch Depth: {}\nNodes Explored: {}\nPath: {}'.format(ids.cost, ids.depth, ids.nodes_explored, ids.path))
 
 # ids = IDS(125340678)
 # ids.dls(3)
