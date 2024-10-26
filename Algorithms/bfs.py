@@ -25,7 +25,8 @@ class BFS(Algorithm):
             empty_tile = self.get_empty_tile_location(current_state) 
             
             # add the possible movements
-            moves = [-3, 1, 3, -1]
+            # based on this, the order of pushing into the stack is up, down, left, right
+            moves = [-3, 3, -1, 1]
             
             for move in moves:
                 # check the validity of possible moves (up, down, left, right)
@@ -35,7 +36,7 @@ class BFS(Algorithm):
                 new_state = self.apply_move(current_state, empty_tile, move)
                    
                 # check if the possible state is explored before or in frontier dequeue to prevent duplicates
-                if new_state not in self.explored and new_state not in self.frontier:
+                if new_state not in self.explored and new_state not in self.parent:
                     self.parent[new_state] = current_state
                     
                     # check if it is the goal 

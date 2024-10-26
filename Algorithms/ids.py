@@ -37,8 +37,8 @@ class IDS(Algorithm):
                 # Get the location of the empty tile in the current state
                 empty_tile = self.get_empty_tile_location(current_state)
 
-                # Define possible moves: right, down, left, up
-                moves = [1, 3, -1, -3]
+                # based on this, the order of pushing into the stack is up, down, left, right
+                moves = [-3, 3, -1, 1]
 
                 for move in moves:
                     # Check the validity of the move

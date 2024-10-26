@@ -53,7 +53,8 @@ class AStar(Algorithm):
             empty_tile = self.get_empty_tile_location(current_state)
 
             # Try all four possible moves
-            moves = [-3, 1, 3, -1]
+            # based on this, the order of pushing into the stack is up, down, left, right
+            moves = [-3, 3, -1, 1]
             for move in moves:
                 # check the validity of possible moves (up, down, left, right)
                 if not self.is_valid_move(empty_tile, move):

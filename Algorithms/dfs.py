@@ -33,7 +33,7 @@ class DFS(Algorithm):
 
             # Try all four possible moves
             # based on this, the order of pushing into the stack is right, down, left, up
-            moves = [1, 3, -1, -3]
+            moves = [1, -1, 3, -3]
 
             # pushing the neighbors in the stack
             for move in moves:
@@ -45,7 +45,7 @@ class DFS(Algorithm):
                 new_state = self.apply_move(current_state, empty_tile, move)
 
                 # Check if the new state is in the explored states or not
-                if new_state not in self.explored and new_state not in [s[0] for s in self.frontier]:
+                if new_state not in self.explored and new_state not in self.parent:
                     # Add new state and depth to frontier
                     self.frontier.append((new_state, current_depth + 1))
                     self.parent[new_state] = current_state
