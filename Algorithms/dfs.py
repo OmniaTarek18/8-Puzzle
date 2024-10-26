@@ -33,10 +33,8 @@ class DFS(Algorithm):
 
             # Try all four possible moves
             # based on this, the order of pushing into the stack is right, down, left, up
-            moves = [1, -1, 3, -3]
-
             # pushing the neighbors in the stack
-            for move in moves:
+            for move in self.moves[::-1]:
                 # check the validity of possible moves (up, down, left, right)
                 if not self.is_valid_move(empty_tile, move):
                     continue

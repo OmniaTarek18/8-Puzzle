@@ -8,6 +8,7 @@ class Algorithm:
         self.explored = set()
         self.parent = {}
         self.goal = 12345678
+        self.moves = [-3, 3, -1, 1]
         # results
         self.cost = 0
         self.running_time = 0

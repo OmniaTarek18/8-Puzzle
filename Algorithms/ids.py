@@ -6,6 +6,7 @@ from Algorithms.algorithm import Algorithm
 class IDS(Algorithm):
     def __init__(self, init_state, goal_test = 12345678):
         super().__init__(init_state)
+        self.depth_tracker = None
         self.goal = goal_test
 
     def dls(self, limit):
@@ -38,9 +39,8 @@ class IDS(Algorithm):
                 empty_tile = self.get_empty_tile_location(current_state)
 
                 # based on this, the order of pushing into the stack is up, down, left, right
-                moves = [-3, 3, -1, 1]
 
-                for move in moves:
+                for move in self.moves[::-1]:
                     # Check the validity of the move
                     if not self.is_valid_move(empty_tile, move):
                         continue
