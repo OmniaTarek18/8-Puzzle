@@ -18,7 +18,6 @@ class IDS(Algorithm):
         self.depth_tracker[self.init_state] = 0
 
         goal_found = False
-        self.cost = -1
 
         while self.frontier:
             current_state, current_depth = self.frontier.pop()
@@ -29,10 +28,9 @@ class IDS(Algorithm):
             # Check if the current state is the goal
             if current_state == self.goal:
                 goal_found = True
-                if self.cost == -1 or self.cost > current_depth:
-                    self.cost = current_depth
-                    self.path = self.get_path()  # Get path to the goal
-                continue
+                self.cost = current_depth
+                self.path = self.get_path()  # Get path to the goal
+                return True
 
             # If the current depth is less than the limit, explore further
             if current_depth < limit:
