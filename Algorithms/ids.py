@@ -9,12 +9,13 @@ class IDS(Algorithm):
         self.goal = goal_test
 
     def dls(self, limit):
-        self.explored = set()  # Reset explored for each depth limit
         self.parent = {}
+        self.depth_tracker = {}  # Track the minimum depth at which each state is reached
 
         # Initialize frontier with (state, depth)
         self.frontier.append((self.init_state, 0))
         self.parent[self.init_state] = None
+        self.depth_tracker[self.init_state] = 0
 
         goal_found = False
         self.cost = -1
@@ -28,12 +29,8 @@ class IDS(Algorithm):
             # Check if the current state is the goal
             if current_state == self.goal:
                 goal_found = True
-                if (self.cost == -1):
+                if self.cost == -1 or self.cost > current_depth:
                     self.cost = current_depth
-                    self.path = self.get_path()
-
-                elif (self.cost > current_depth):
-                    self.cost = current_depth  # Cost is depth when the goal is found
                     self.path = self.get_path()  # Get path to the goal
                 continue
 
@@ -53,19 +50,14 @@ class IDS(Algorithm):
                     # Apply the move to get the new state
                     new_state = self.apply_move(current_state, empty_tile, move)
 
-                    if not self.check_loop(current_state, new_state):
-                        # Push new state with increased depth
+                    # Only proceed if the new state hasn't been reached at a lower depth
+                    if new_state not in self.depth_tracker or self.depth_tracker[new_state] > current_depth + 1:
+                        # Track the depth at which this state is reached
+                        self.depth_tracker[new_state] = current_depth + 1
                         self.frontier.append((new_state, current_depth + 1))
                         self.parent[new_state] = current_state
 
-        return goal_found  # Goal not found within the depth limit
-    
-    def check_loop (self,current_state, new_state):
-        while (current_state != None):
-            if (current_state == new_state):
-                return True
-            current_state = self.parent.get(current_state)
-        return False
+        return goal_found
 
     def iddfs(self):
         depth = 0
