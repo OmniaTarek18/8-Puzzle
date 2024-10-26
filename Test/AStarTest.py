@@ -74,18 +74,35 @@ class AStarTest(unittest.TestCase):
     ###### 3
     # manhattan
     def test_Manhattan_3(self):
+        manhattan = SearchTechnique("A*", 125630478,"Manhattan")
+        self.assertTrue(manhattan.is_solvable())
+        manhattan.solve()
+        self.assertEqual(manhattan.cost, 11)
+        self.assertEqual(manhattan.depth, 11)
+    # euclidean
+    def test_Euclidean_3(self):
+        euclidean = SearchTechnique("A*", 125630478,"Euclidean")
+        self.assertTrue(euclidean.is_solvable())
+        euclidean.solve()
+        self.assertEqual(euclidean.cost, 11)
+        self.assertEqual(euclidean.depth, 11)
+    ###### 4
+    # manhattan
+    def test_Manhattan_4(self):
         manhattan = SearchTechnique("A*", 102754863,"Manhattan")
         self.assertTrue(manhattan.is_solvable())
         manhattan.solve()
         self.assertEqual(manhattan.cost, 23)
         self.assertEqual(manhattan.depth, 23)
     # euclidean
-    def test_Euclidean_3(self):
+    def test_Euclidean_4(self):
         euclidean = SearchTechnique("A*", 102754863,"Euclidean")
         self.assertTrue(euclidean.is_solvable())
         euclidean.solve()
         self.assertEqual(euclidean.cost, 23)
         self.assertEqual(euclidean.depth, 23)
+
+
 
 if __name__ == '__main__':
     unittest.main()

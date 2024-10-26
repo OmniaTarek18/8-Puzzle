@@ -27,6 +27,13 @@ class BFSTest(unittest.TestCase):
         self.assertEqual(bfs.cost, 11)
         self.assertEqual(bfs.depth, 11)
 
+    def test_BFS_4(self):
+        bfs = SearchTechnique("BFS", 102754863)
+        self.assertTrue(bfs.is_solvable())
+        bfs.solve()
+        self.assertEqual(bfs.cost, 23)
+        self.assertEqual(bfs.depth, 23)
+
 
 
 

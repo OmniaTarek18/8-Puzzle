@@ -29,7 +29,7 @@ class DFSTest(unittest.TestCase):
         dfs = SearchTechnique("DFS", 123456780)
         self.assertTrue(dfs.is_solvable())
         dfs.solve()
-        self.assertEqual(dfs.cost>100)
+        self.assertTrue(dfs.cost>100)
 
 
 

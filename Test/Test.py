@@ -5,6 +5,28 @@ from Heuristics.Euclidean import euclidean_heuristic
 from Heuristics.Manhattan import manhattan_heuristic
 
 class Test(unittest.TestCase):
+    initial_states = [
+        312045678,
+        125340678,
+        125348670,
+        125348607,
+        125308647,
+        125038647,
+        125638047,
+        125638407,
+        125638470,
+        125630478,
+        123406758,
+        123456708,
+        867254301,
+        867254031,
+        876543210,
+        87654321,
+        806547231,
+        125340678,
+        142658730,
+        102754863,
+    ]
 
     # check the number of inversions in the state
     def test_count_inversions(self):
@@ -17,29 +39,7 @@ class Test(unittest.TestCase):
         self.assertEqual(inversions, 7 + 6 + 5 + 4 + 3 + 2 + 1)
     # check if the initial state is solvable
     def test_isSolvable(self):
-        initial_states = [
-            312045678,
-            125340678,
-            125348670,
-            125348607,
-            125308647,
-            125038647,
-            125638047,
-            125638407,
-            125638470,
-            125630478,
-            123406758,
-            123456708,
-            867254301,
-            867254031,
-            876543210,
-            87654321,
-            806547231,
-            125340678,
-            142658730,
-            102754863,
-        ]
-        for initial_state in initial_states:
+        for initial_state in self.initial_states:
             algo = Algorithm(initial_state)
             self.assertTrue(algo.is_solvable())
     # check if the initial state is not solvable
@@ -90,13 +90,50 @@ class Test(unittest.TestCase):
     def test_euclidean_distance(self):
         heuristic = euclidean_heuristic(102345678, 12345678)
         self.assertEqual(heuristic, 1)
+    # compare run time of 4 algorithms
+    def test_compare_runtime(self):
+        initial_state = 102754863
+        algorithms = [
+            ("BFS", None),
+            ("IDS", None),
+            ("A*", "Manhattan"),
+            ("A*", "Euclidean")
+        ]
+        run_times = []
+        costs = []
+        for algorithm, heuristic in algorithms:
+            algo = SearchTechnique(algorithm, initial_state, heuristic)
+            algo.solve()
+            run_times.append(algo.running_time)
+            costs.append(algo.cost)
+        self.assertTrue(run_times[1] > run_times[0] > run_times[3] > run_times[2])
+        self.assertTrue(costs[0] == costs[1] == costs[2] == costs[3])
+    #test_compare_optimality
+    def test_compare_optimality(self):
+        algorithms = [
+            ("BFS", None),
+            ("IDS", None),
+            ("A*", "Manhattan"),
+            ("A*", "Euclidean")
+        ]
+        for initial_state in self.initial_states:
+            run_times = []
+            costs = []
+            print('\n=====================initial state:', initial_state, '=====================')
+            for algorithm, heuristic in algorithms:
+                algo = SearchTechnique(algorithm, initial_state, heuristic)
+                algo.solve()
+                costs.append(algo.cost)
+                run_times.append(algo.running_time)
+                print("algorithm: ", algorithm)
+                print('Cost: {}\nSearch Depth: {}\nNodes Explored: {}\ntime: {}'.format(algo.cost, algo.depth, algo.nodes_explored,algo.running_time))
+            self.assertTrue(costs[0] == costs[1] == costs[2] == costs[3])
 
-    def test_ids(self):
-        ids = SearchTechnique("IDS", 867254301)
-        ids.solve()
-        self.assertEqual(ids.cost, 27)
-        # self.assertEqual(ids.depth, 22)
-        self.assertEqual(ids.nodes_explored, 27)
+
+
+
+
+
 
 
 
