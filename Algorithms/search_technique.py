@@ -9,7 +9,7 @@ class SearchTechnique:
             return BFS(init_state)
         elif type == "DFS":
             return DFS(init_state)
-        elif type == "Iterative DFS":
+        elif type == "IDS":
             return IDS(init_state)
         elif type == "A*":
             return AStar(init_state, heuristic, goal_test)
