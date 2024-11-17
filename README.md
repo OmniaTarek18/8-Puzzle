@@ -91,7 +91,13 @@ An instance of the 8-puzzle game consists of a board holding 8 distinct movable 
      2. Expand the state with the lowest priority (cost + heuristic).
      3. Check if the state is the goal before expansion.
    - **Time Complexity**: O(b^d)  
-   - **Space Complexity**: O(b^d)  
+   - **Space Complexity**: O(b^d)     
+   - **Heuristics**:
+     - **Manhattan Distance**: Total moves needed to reach the goal based on grid constraints.
+     - **Euclidean Distance**: Straight-line distance to the goal.
+
+   **Conclusion**: Manhattan distance is preferred for its accuracy and efficiency.
+
    <details>
     <summary> <b>Sample Runs:</b> </summary>
      
@@ -101,12 +107,6 @@ An instance of the 8-puzzle game consists of a board holding 8 distinct movable 
      ![image](https://github.com/user-attachments/assets/c90ce3b1-f28c-409d-a097-2addf335c782)
 
    </details>
-   
-   - **Heuristics**:
-     - **Manhattan Distance**: Total moves needed to reach the goal based on grid constraints.
-     - **Euclidean Distance**: Straight-line distance to the goal.
-
-   **Conclusion**: Manhattan distance is preferred for its accuracy and efficiency.
 ---
 
 ### Notes:
